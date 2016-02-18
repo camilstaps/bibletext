@@ -158,5 +158,5 @@ pythontex-files-*/
 # Latexian
 TSWLatexianTemp*
 
-bible.pdf
-bible.tmp
+bibletext.pdf
+bibletext.tmp
