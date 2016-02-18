@@ -1,0 +1,2 @@
+# bible
+LaTeX bible package
