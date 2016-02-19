@@ -1,8 +1,8 @@
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{bibletext}
-  [2016/02/18 v0.1 Insert Bible texts]
+  [2016/02/19 v0.1.1-dev Insert Bible texts]
 
-\DeleteShortVerb{\|}
+\ifcsname{DeleteShortVerb}\endcsname\DeleteShortVerb{\|}\fi
 
 \RequirePackage{pgfkeys}
 
