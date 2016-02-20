@@ -2,13 +2,26 @@
 \ProvidesPackage{bibletext}
   [2016/02/19 v0.1.1-dev Insert Bible texts]
 
-\ifcsname{DeleteShortVerb}\endcsname\DeleteShortVerb{\|}\fi
+\newif\ifbibletext@defined
+\bibletext@definedfalse
+\newcommand{\bibletext@checkdefined}[1]{%
+  \ifcsname#1\endcsname%
+    \bibletext@definedtrue%
+  \else%
+    \bibletext@definedfalse%
+  \fi%
+}
+
+\bibletext@checkdefined{DeleteShortVerb}
+\ifbibletext@defined%
+  \DeleteShortVerb{\|}%
+\fi
 
 \RequirePackage{pgfkeys}
 
-\newif\ifbibletextRef
-\newif\ifbibletextOmitChapter
-\newif\ifbibletextOmitRepeatedChapter
+\newif\ifbibletext@Ref
+\newif\ifbibletext@OmitChapter
+\newif\ifbibletext@OmitRepeatedChapter
 \pgfkeys{
   /bibletext/.is family, /bibletext,
   default/.style={
@@ -16,18 +29,18 @@
     ref=false,
     omitchapter=false,
   },
-  translation/.estore in = \bibletextTranslation, % unused for now
-  ref/.is if=bibletextRef,
-  omitchapter/.is if=bibletextOmitChapter,
-  omitrepeatedchapter/.is if=bibletextOmitRepeatedChapter,
+  translation/.estore in = \bibletext@Translation, % unused for now
+  ref/.is if=bibletext@Ref,
+  omitchapter/.is if=bibletext@OmitChapter,
+  omitrepeatedchapter/.is if=bibletext@OmitRepeatedChapter,
 }
 \newcommand\bibletext[2][]{%
   \pgfkeys{/bibletext, default, #1}%
-  \ifbibletextRef%
-    \ifbibletextOmitRepeatedChapter%
+  \ifbibletext@Ref%
+    \ifbibletext@OmitRepeatedChapter%
       \input{|"bible -f '#2' | grep -o '[[:digit:]].*' | head -n1"}%
       \input{|"bible -f '#2' | grep -o '[[:digit:]][[:digit:]]*[[:space:]].*' | tail -n+2"}%
-    \else\ifbibletextOmitChapter%
+    \else\ifbibletext@OmitChapter%
       \input{|"bible -f '#2' | grep -o '[[:digit:]][[:digit:]]*[[:space:]].*'"}%
     \else%
       \input{|"bible -f '#2' | grep -o '[[:digit:]].*'"}%
@@ -35,6 +48,7 @@
   \else%
     \input{|"bible -f '#2' | cut -d' ' -f2-"}%
   \fi%
+  \unskip%
 }
 
 \endinput
