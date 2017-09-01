@@ -2,9 +2,9 @@
 
 \usepackage[hidelinks]{hyperref}
 
-\title{Inserting Bible texts with the \textsf{bible} package}
+\title{Typesetting Bible texts with the \textsf{bible} package}
 \author{Camil Staps\footnote{info@camilstaps.nl}}
-\date{Version 0.1.1-dev\\2016-02-19}
+\date{Version 0.1.2\\2017-09-01}
 
 \usepackage{bibletext}
 
@@ -25,13 +25,22 @@
 \maketitle
 
 \section{Introduction}
-This package allows you to add Bible texts by specifying references, rather
-than copying the text into the document.
+This package allows you to add Bible texts by specifying references,
+	rather than copying the text into the document.
 
-Under the hood, this uses the \texttt{bible} command, for which you need to
-install \texttt{bible-kjv}. This means that by default you will have the KJV
-translation. Because of the need for this package and other implementation
-details, this package won't work on Windows.
+Under the hood, this uses the \texttt{bible} command,
+	for which you need to install \texttt{bible-kjv}.
+This means that by default you will have the KJV translation.
+Because of the need for this package and other implementation details,
+	this package won't work on Windows.
+
+Because this package uses a binary program under the hood
+	(which is a potential security vulnerability),
+	you need to add the \texttt{-shell-escape} option to the command line arguments of your TeX processor.
+
+\section{Installation and source code}
+The \textsf{bible} package is available from CTAN: \url{https://ctan.org/pkg/bibletext}.
+The source code is on GitHub: \url{https://github.com/camilstaps/bibletext}.
 
 \section{Examples}
 \begin{example}
@@ -52,18 +61,16 @@ details, this package won't work on Windows.
 
 \section{Future work}
 \begin{itemize}
-	\item When \verb$omitrepeatedchapter=true$, the chapter should again be
-		outputted when a new chapter has begun.
-	\item The verse indications should be parsed and a \verb$\versefont$ command
-		should be defined.
-	\item Implement the \verb$translation$ option to allow the writer to select a
-		specific translation.
+	\item When \verb$omitrepeatedchapter=true$,
+		the chapter should again be outputted when a new chapter has begun.
+	\item The verse indications should be parsed and a \verb$\versefont$ command should be defined.
+	\item Implement the \verb$translation$ option to allow the writer to select a specific translation.
 \end{itemize}
 
 \section{Incompatibilities}
-The \textsf{bible} package needs to pipe shell commands, for which it needs to
-do \verb$\DeleteShortVerb{\|}$. This means that you cannot use \verb$|foo|$ as
-shorthand for \verb$\verb|foo|$\footnote{Credits go to egreg on TeX.SE,
-\url{http://tex.stackexchange.com/q/294732/23992}.}.
+The \textsf{bible} package needs to pipe shell commands,
+	for which it needs to do \verb$\DeleteShortVerb{\|}$.
+This means that you cannot use \verb$|foo|$ as shorthand for \verb$\verb|foo|$%
+	\footnote{Credits go to egreg on TeX.SE, \url{http://tex.stackexchange.com/q/294732/23992}.}.
 
 \end{document}

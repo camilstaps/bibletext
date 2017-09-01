@@ -1,55 +1,61 @@
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{bibletext}
-  [2016/02/19 v0.1.1-dev Insert Bible texts]
+	[2016/02/19 v0.1.1-dev Insert Bible texts]
 
 \newif\ifbibletext@defined
 \bibletext@definedfalse
 \newcommand{\bibletext@checkdefined}[1]{%
-  \ifcsname#1\endcsname%
-    \bibletext@definedtrue%
-  \else%
-    \bibletext@definedfalse%
-  \fi%
+	\ifcsname#1\endcsname%
+		\bibletext@definedtrue%
+	\else%
+		\bibletext@definedfalse%
+	\fi%
 }
 
 \bibletext@checkdefined{DeleteShortVerb}
 \ifbibletext@defined%
-  \DeleteShortVerb{\|}%
+	\DeleteShortVerb{\|}%
 \fi
 
 \RequirePackage{pgfkeys}
+\RequirePackage{pdftexcmds}
 
 \newif\ifbibletext@Ref
 \newif\ifbibletext@OmitChapter
 \newif\ifbibletext@OmitRepeatedChapter
 \pgfkeys{
-  /bibletext/.is family, /bibletext,
-  default/.style={
-    translation=kjv,
-    ref=false,
-    omitchapter=false,
-  },
-  translation/.estore in = \bibletext@Translation, % unused for now
-  ref/.is if=bibletext@Ref,
-  omitchapter/.is if=bibletext@OmitChapter,
-  omitrepeatedchapter/.is if=bibletext@OmitRepeatedChapter,
+	/bibletext/.is family, /bibletext,
+	default/.style={
+		translation=kjv,
+		ref=false,
+		omitchapter=false,
+	},
+	translation/.estore in = \bibletext@Translation, % unused for now
+	ref/.is if=bibletext@Ref,
+	omitchapter/.is if=bibletext@OmitChapter,
+	omitrepeatedchapter/.is if=bibletext@OmitRepeatedChapter,
 }
 \newcommand\bibletext[2][]{%
-  \pgfkeys{/bibletext, default, #1}%
-  \ifbibletext@Ref%
-    \ifbibletext@OmitRepeatedChapter%
-      \input{|"bible -f '#2' | grep -o '[[:digit:]].*' | head -n1"}%
-      \input{|"bible -f '#2' | grep -o '[[:digit:]][[:digit:]]*[[:space:]].*' | tail -n+2"}%
-    \else\ifbibletext@OmitChapter%
-      \input{|"bible -f '#2' | grep -o '[[:digit:]][[:digit:]]*[[:space:]].*'"}%
-    \else%
-      \input{|"bible -f '#2' | grep -o '[[:digit:]].*'"}%
-    \fi\fi%
-  \else%
-    \input{|"bible -f '#2' | cut -d' ' -f2-"}%
-  \fi%
-  \unskip%
+	\pgfkeys{/bibletext, default, #1}%
+	\ifbibletext@Ref%
+		\ifbibletext@OmitRepeatedChapter%
+			\input{|"bible -f '#2' | grep -o '[[:digit:]].*' | head -n1"}%
+			\input{|"bible -f '#2' | grep -o '[[:digit:]][[:digit:]]*[[:space:]].*' | tail -n+2"}%
+		\else\ifbibletext@OmitChapter%
+			\input{|"bible -f '#2' | grep -o '[[:digit:]][[:digit:]]*[[:space:]].*'"}%
+		\else%
+			\input{|"bible -f '#2' | grep -o '[[:digit:]].*'"}%
+		\fi\fi%
+	\else%
+		\input{|"bible -f '#2' | cut -d' ' -f2-"}%
+	\fi%
+	\unskip%
 }
-
+\AtEndOfPackage{
+	\ifnum\pdf@shellescape=1\relax\else
+		\PackageError{bibletext}
+			{You must invoke LaTeX with the -shell-escape flag}
+			{Pass the -shell-escape flag to LaTeX. Refer to the bibletext.sty
+				documentation for more information.}
+	\fi}
 \endinput
-
